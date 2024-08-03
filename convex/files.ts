@@ -12,6 +12,7 @@ export const createFile = mutation({
         if (!identity) {
             throw new ConvexError("You must be logged in to upload a file");
         }
+
         await ctx.db.insert('files', {
             name: args.name,
             orgId: args.orgId,
