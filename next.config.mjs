@@ -1,4 +1,13 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+    images: {
+        remotePatterns: [
+            {
+                hostname: "quirky-coyote-356.convex.cloud"
+            }
+        ]
+    }
+};
+
 
 export default nextConfig;

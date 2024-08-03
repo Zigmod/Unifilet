@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+// import logo from "./logo.png";
 
 export default function LandingPage() {
   return (
@@ -19,13 +20,13 @@ export default function LandingPage() {
         </div>
         <div className="mx-auto max-w-2xl py-8">
           <div className="text-center">
-            <Image
-              src="/logo.png"
+            {/* <Image
+              src={logo}
               width="200"
               height="200"
               alt="unifilet logo"
               className="inline-block mb-8"
-            />
+            /> */}
 
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
               The easiest way to upload and share files with your company
