@@ -1,177 +1,68 @@
-"use client";
+import Image from "next/image";
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
-import { useOrganization, useUser } from "@clerk/nextjs";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useMutation } from "convex/react";
-import { api } from "../../convex/_generated/api";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-
-import { z } from "zod";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
-import { Loader2 } from "lucide-react";
-import { Doc } from "../../convex/_generated/dataModel";
-
-const formSchema = z.object({
-  title: z.string().min(1).max(200),
-  file: z
-    .custom<FileList>((val) => val instanceof FileList, "Required")
-    .refine((files) => files.length > 0, `Required`),
-});
-
-export function UploadButton() {
-  const { toast } = useToast();
-  const organization = useOrganization();
-  const user = useUser();
-  const generateUploadUrl = useMutation(api.files.generateUploadUrl);
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: "",
-      file: undefined,
-    },
-  });
-
-  const fileRef = form.register("file");
-
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!orgId) return;
-
-    const postUrl = await generateUploadUrl();
-
-    const fileType = values.file[0].type;
-
-    const result = await fetch(postUrl, {
-      method: "POST",
-      headers: { "Content-Type": fileType },
-      body: values.file[0],
-    });
-    const { storageId } = await result.json();
-
-    const types = {
-      "image/png": "image",
-      "application/pdf": "pdf",
-      "text/csv": "csv",
-    } as Record<string, Doc<"files">["type"]>;
-
-    try {
-      await createFile({
-        name: values.title,
-        fileId: storageId,
-        orgId,
-        type: types[fileType],
-      });
-
-      form.reset();
-
-      setIsFileDialogOpen(false);
-
-      toast({
-        variant: "success",
-        title: "File Uploaded",
-        description: "Now everyone can view your file",
-      });
-    } catch (err) {
-      toast({
-        variant: "destructive",
-        title: "Something went wrong",
-        description: "Your file could not be uploaded, try again later",
-      });
-    }
-  }
-
-  let orgId: string | undefined = undefined;
-  if (organization.isLoaded && user.isLoaded) {
-    orgId = organization.organization?.id ?? user.user?.id;
-  }
-
-  const [isFileDialogOpen, setIsFileDialogOpen] = useState(false);
-
-  const createFile = useMutation(api.files.createFile);
-
+export default function LandingPage() {
   return (
-    <Dialog
-      open={isFileDialogOpen}
-      onOpenChange={(isOpen) => {
-        setIsFileDialogOpen(isOpen);
-        form.reset();
-      }}
-    >
-      <DialogTrigger asChild>
-        <Button>Upload File</Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="mb-8">Upload your File Here</DialogTitle>
-          <DialogDescription>
-            This file will be accessible by anyone in your organization
-          </DialogDescription>
-        </DialogHeader>
-
-        <div>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Title</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="file"
-                render={() => (
-                  <FormItem>
-                    <FormLabel>File</FormLabel>
-                    <FormControl>
-                      <Input type="file" {...fileRef} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button
-                type="submit"
-                disabled={form.formState.isSubmitting}
-                className="flex gap-1"
-              >
-                {form.formState.isSubmitting && (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                )}
-                Submit
-              </Button>
-            </form>
-          </Form>
+    <div className="bg-white">
+      <div className="relative isolate px-6 pt-14 lg:px-8">
+        <div
+          className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+          aria-hidden="true"
+        >
+          <div
+            className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+            style={{
+              clipPath:
+                "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
+            }}
+          />
         </div>
-      </DialogContent>
-    </Dialog>
+        <div className="mx-auto max-w-2xl py-8">
+          <div className="text-center">
+            <Image
+              src="/logo.png"
+              width="200"
+              height="200"
+              alt="unifilet logo"
+              className="inline-block mb-8"
+            />
+
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+              The easiest way to upload and share files with your company
+            </h1>
+            <p className="mt-6 text-lg leading-8 text-gray-600">
+              Make and account and start managing your files in less than a
+              minute.
+            </p>
+            <div className="mt-10 flex items-center justify-center gap-x-6">
+              <Link
+                href="/dashboard/files"
+                className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Get started
+              </Link>
+              <a
+                href="#"
+                className="text-sm font-semibold leading-6 text-gray-900"
+              >
+                Learn more <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div
+          className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
+          aria-hidden="true"
+        >
+          <div
+            className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
+            style={{
+              clipPath:
+                "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
+            }}
+          />
+        </div>
+      </div>
+    </div>
   );
 }
