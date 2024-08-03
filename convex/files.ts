@@ -46,9 +46,7 @@ export async function hasAccessToOrg(
         user.tokenIdentifier.includes(orgId);
 
     if (!hasAccess) {
-        return hasAccess;
-
-        // return null;
+        return null;
     }
 
     return { user };
@@ -66,7 +64,6 @@ export const createFile = mutation({
 
         if (!hasAccess) {
             return hasAccess;
-
             // throw new ConvexError("you do not have access to this org");
         }
 
@@ -91,10 +88,9 @@ export const getFiles = query({
     async handler(ctx, args) {
         const hasAccess = await hasAccessToOrg(ctx, args.orgId);
 
-        // if (!hasAccess) {
-        //     return hasAccess;
-        //     // return [];
-        // }
+        if (!hasAccess) {
+            return [];
+        }
 
         let files = await ctx.db
             .query("files")
@@ -263,12 +259,15 @@ async function hasAccessToFile(
 
     if (!file) {
         return null;
+        // return null;
+
     }
 
     const hasAccess = await hasAccessToOrg(ctx, file.orgId);
 
     if (!hasAccess) {
-        return null;
+        return hasAccess;
+        // return null;
     }
 
     return { user: hasAccess.user, file };

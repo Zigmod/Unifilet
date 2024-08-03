@@ -80,6 +80,7 @@ export function FileBrowser({
             isFavorited: (favorites ?? []).some(
                 (favorite) => favorite.fileId === file._id
             ),
+            url: '',
         })) ?? [];
 
     return (
