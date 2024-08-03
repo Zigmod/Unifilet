@@ -6,11 +6,14 @@ import { Sign } from "crypto";
 import Image from "next/image";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { Organization } from "@clerk/nextjs/server";
 
 export default function Home() {
   const { organization } = useOrganization();
   console.log(organization?.id);
-  const files = useQuery(api.files.getFiles);
+  const files = useQuery(api.files.getFiles, organization?.id ? { orgId: organization.id } : "skip"
+
+  );
   const createFile = useMutation(api.files.createFile);
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -35,8 +38,10 @@ export default function Home() {
       })}
 
       <Button onClick={() => {
+        if (!organization) return;
         createFile({
           name: "hello world",
+          orgId: organization?.id,
 
         })
       }}
