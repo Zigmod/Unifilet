@@ -70,6 +70,7 @@ export function UploadButton() {
 
         const types = {
             "image/png": "image",
+            "image/jpeg": "image",
             "application/pdf": "pdf",
             "text/csv": "csv",
         } as Record<string, Doc<"files">["type"]>;
@@ -77,13 +78,13 @@ export function UploadButton() {
         try {
             await createFile({
                 name: values.title,
+
                 fileId: storageId,
                 orgId,
                 type: types[fileType],
             });
-            console.log("fileType", fileType),
 
-                form.reset();
+            form.reset();
 
             setIsFileDialogOpen(false);
 

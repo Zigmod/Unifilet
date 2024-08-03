@@ -26,6 +26,7 @@ export async function getUser(
     return user;
 }
 
+
 export const createUser = internalMutation({
     args: { tokenIdentifier: v.string(), name: v.string(), image: v.string() },
     async handler(ctx, args) {
