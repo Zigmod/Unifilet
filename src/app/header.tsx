@@ -1,4 +1,5 @@
-import { OrganizationSwitcher, UserButton, UserProfile } from "@clerk/nextjs";
+import { OrganizationSwitcher, SignInButton, SignedOut, UserButton, UserProfile } from "@clerk/nextjs";
+import { Button } from "@/components/ui/button";
 
 export function Header() {
     return (
@@ -7,9 +8,14 @@ export function Header() {
                 <div>
                     Unifilet
                 </div>
-                <div className="flex gap-2"></div>
-                <OrganizationSwitcher />
-                <UserButton />
+                <div className="flex gap-2">
+                    <OrganizationSwitcher />
+                    <UserButton />
+                    <SignedOut>
+                        <SignInButton><Button>SignIn</Button></SignInButton>
+                    </SignedOut>
+                </div>
+
             </div>
 
         </div>
