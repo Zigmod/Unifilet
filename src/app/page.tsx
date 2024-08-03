@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { SignedOut } from "@clerk/nextjs";
+import { SignedOut, useOrganization } from "@clerk/nextjs";
 import { SignInButton, SignOutButton, SignedIn } from "@clerk/nextjs";
 import { Sign } from "crypto";
 import Image from "next/image";
@@ -8,6 +8,8 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
 export default function Home() {
+  const { organization } = useOrganization();
+  console.log(organization?.id);
   const files = useQuery(api.files.getFiles);
   const createFile = useMutation(api.files.createFile);
   return (
