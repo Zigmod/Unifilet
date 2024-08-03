@@ -4,11 +4,11 @@ import { SignedOut } from "@clerk/nextjs";
 import { SignInButton, SignOutButton, SignedIn } from "@clerk/nextjs";
 import { Sign } from "crypto";
 import Image from "next/image";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
 export default function Home() {
-
+  const files = useQuery(api.files.getFiles);
   const createFile = useMutation(api.files.createFile);
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -27,6 +27,10 @@ export default function Home() {
 
 
       </SignedOut>
+
+      {files?.map((file) => {
+        return <div key={file._id}>{file.name}</div>
+      })}
 
       <Button onClick={() => {
         createFile({
